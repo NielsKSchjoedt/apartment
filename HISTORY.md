@@ -1,3 +1,14 @@
+# 1.0.2
+  * July 2, 2015
+
+  - Fix pg_dump env vars - pull/208 [MitinPavel]
+  - Allow custom seed data file - pull/234 [typeoneerror]
+
+# 1.0.1
+  * April 28, 2015
+
+  - Fix `Apartment::Deprecation` which was rescuing all exceptions
+
 # 1.0.0
   * Feb 3, 2015
 

@@ -8,6 +8,19 @@ Apartment provides tools to help you deal with multiple tenants in your Rails
 application. If you need to have certain data sequestered based on account or company,
 but still allow some data to exist in a common tenant, Apartment can help.
 
+## Excessive Memory Issues on ActiveRecord 4.x
+
+> If you're noticing ever growing memory issues (ie growing with each tenant you add)
+> when using Apartment, that's because there's [an issue](https://github.com/rails/rails/issues/19578)
+> with how ActiveRecord maps Postgresql data types into AR data types.
+> This has been patched and will be release for AR 4.2.2. It's apparently hard
+> to backport to 4.1 unfortunately.
+> If you want to use this today, you can use our [4.2.1 patched version](https://github.com/influitive/rails/tree/v4.2.1.memfix) on our github account using the code sample below.
+
+```ruby
+gem 'rails', '4.2.1', github: 'influitive/rails', tag: 'v4.2.1.memfix'
+```
+
 
 ## Installation
 
@@ -36,6 +49,9 @@ on a per-user basis, look under "Usage - Switching tenants per request", below.
 > * for Rails 3.1.x: _Rails ~> 3.1.2_, it contains a [patch](https://github.com/rails/rails/pull/3232) that makes prepared statements work with multiple schemas
 
 ## Usage
+### Video Tutorial
+How to separate your application data into different accounts or companies.
+[GoRails #47](https://gorails.com/episodes/multitenancy-with-apartment)
 
 ### Creating new Tenants
 
@@ -284,7 +300,7 @@ This would be for a config with `default_schema` set to `public` and `persistent
 4. Next: `CREATE SCHEMA IF NOT EXISTS hstore;`
 5. Finally: `CREATE EXTENSION IF NOT EXISTS hstore SCHEMA hstore;` and hit enter (`\q` to exit)
 
-To double check, login to the console of your Heroku app and see if `Apartment.connection.default_search_path` is `public,hstore`
+To double check, login to the console of your Heroku app and see if `Apartment.connection.schema_search_path` is `public,hstore`
 
 #### 3. Ensure the schema is in the apartment config
 ```ruby
@@ -326,7 +342,7 @@ config.use_sql = true
 
 ### Managing Migrations
 
-In order to migrate all of your tenants (or posgresql schemas) you need to provide a list
+In order to migrate all of your tenants (or postgresql schemas) you need to provide a list
 of dbs to Apartment.  You can make this dynamic by providing a Proc object to be called on migrations.
 This object should yield an array of string representing each tenant name.  Example:
 
@@ -378,3 +394,5 @@ config.prepend_environment = !Rails.env.production?
 ## License
 
 Apartment is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/influitive/apartment/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
